@@ -4,5 +4,6 @@ public class HardwareDef {
     public static String frontleft = "frontleft",
             frontright = "frontright",
             backleft = "backleft",
-            backright = "backright";
+            backright = "backright",
+            slide_motor = "slidemotor";
 }

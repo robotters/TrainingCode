@@ -16,6 +16,8 @@ import github.robotters.training.common.init.Gamepads;
 import github.robotters.training.common.init.SubsystemStateContainer;
 import github.robotters.training.simba.commands.teleop.DefaultDriveCommand;
 import github.robotters.training.simba.subsystems.DriveTrain;
+import github.robotters.training.simba.subsystems.LinearSlide;
+import github.robotters.training.simba.subsystems.LinearSlidePidController;
 
 // Robot Class Run In Each Op Mode
 public class Simba extends Robot {
@@ -27,7 +29,7 @@ public class Simba extends Robot {
 
     public Simba(OpModeType type, HardwareMap map, Gamepads gamepads) {
         Map<String, Subsystem> subsystemMap = SubsystemStateContainer.getState();
-        InitSubsystems(subsystemMap, map, gamepads);
+        InitSubsystems(subsystemMap, map);
         if(type == OpModeType.AUTO) {
             InitAutoScheduler(subsystemMap);
         } else if(type == OpModeType.TELEOP) {
@@ -45,7 +47,7 @@ public class Simba extends Robot {
 
     }
 
-    private void InitSubsystems(Map<String, Subsystem> subsystemMap, HardwareMap map, Gamepads gamepads) {
+    private void InitSubsystems(Map<String, Subsystem> subsystemMap, HardwareMap map) {
         if (!subsystemMap.containsKey(DriveTrain.key)) {
             // Initialize Drivetrain Object
             Motor.GoBILDA drivetrain_motor_type = Motor.GoBILDA.RPM_312;
@@ -56,8 +58,15 @@ public class Simba extends Robot {
                     new MotorEx(map, HardwareDef.backright, drivetrain_motor_type)
             );
             DriveTrain driveTrain = new DriveTrain(drive);
-            driveTrain.setDefaultCommand(new DefaultDriveCommand(driveTrain, gamepads.driver1));
             subsystemMap.put(DriveTrain.key, driveTrain);
+        }
+        if (!subsystemMap.containsKey(LinearSlidePidController.key)) {
+            LinearSlidePidController controller = new LinearSlidePidController(1, 1, 1, 1);
+            subsystemMap.put(LinearSlidePidController.key, controller);
+        }
+        if (!subsystemMap.containsKey(LinearSlide.key)) {
+            LinearSlide slide = new LinearSlide(new MotorEx(map, HardwareDef.slide_motor, Motor.GoBILDA.RPM_312));
+            subsystemMap.put(LinearSlide.key, slide);
         }
     }
 }

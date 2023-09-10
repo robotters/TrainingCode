@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class LinearSlide extends SubsystemBase {
+    public static String key = "LinearSlide";
     public Position target_position;
     public enum Position {
         UP,
