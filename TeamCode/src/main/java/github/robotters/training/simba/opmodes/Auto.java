@@ -16,7 +16,7 @@ public class Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         reads = new BulkReads(hardwareMap.getAll(LynxModule.class));
         Simba.OpModeType type = Simba.OpModeType.AUTO;
-        robot = new Simba(type);
+        robot = new Simba(type, hardwareMap);
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             reads.BulkRead();

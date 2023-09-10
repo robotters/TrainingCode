@@ -17,7 +17,7 @@ public class Teleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Simba.OpModeType type = Simba.OpModeType.TELEOP;
         reads = new BulkReads(hardwareMap.getAll(LynxModule.class));
-        robot = new Simba(type);
+        robot = new Simba(type, hardwareMap);
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             reads.BulkRead();
