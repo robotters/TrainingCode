@@ -17,6 +17,7 @@ public class Simba extends Robot {
 
     public Simba(OpModeType type) {
         Map<String, Subsystem> stateMap = State.getState();
+        InitSubsystems(stateMap);
         if(type == OpModeType.AUTO) {
             InitAutoScheduler(stateMap);
         } else if(type == OpModeType.TELEOP) {
@@ -31,6 +32,10 @@ public class Simba extends Robot {
 
     // Initialize The Teleop Drive Commands
     private void InitTeleopScheduler(Map<String, Subsystem> stateMap) {
+
+    }
+
+    private void InitSubsystems(Map<String, Subsystem> stateMap) {
 
     }
 }
