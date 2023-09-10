@@ -33,17 +33,16 @@ public class Simba extends Robot {
         if(type == OpModeType.AUTO) {
             InitAutoScheduler(subsystemMap);
         } else if(type == OpModeType.TELEOP) {
-            InitTeleopScheduler(subsystemMap);
+            InitTeleopScheduler(subsystemMap, gamepads);
         }
     }
 
     // Initialize The Auto Scheduler Using The Auto Drive Commands
     private void InitAutoScheduler(Map<String, Subsystem> subsystemMap) {
-
     }
 
     // Initialize The Teleop Drive Commands
-    private void InitTeleopScheduler(Map<String, Subsystem> subsystemMap) {
+    private void InitTeleopScheduler(Map<String, Subsystem> subsystemMap, Gamepads gamepads) {
 
     }
 

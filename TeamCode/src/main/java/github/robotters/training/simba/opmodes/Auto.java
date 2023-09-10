@@ -15,10 +15,9 @@ public class Auto extends LinearOpMode {
     BulkReads reads;
     @Override
     public void runOpMode() throws InterruptedException {
-        Gamepads gamepads = new Gamepads(gamepad1, gamepad2);
         reads = new BulkReads(hardwareMap.getAll(LynxModule.class));
         Simba.OpModeType type = Simba.OpModeType.AUTO;
-        robot = new Simba(type, hardwareMap, gamepads);
+        robot = new Simba(type, hardwareMap, null);
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             reads.BulkRead();
