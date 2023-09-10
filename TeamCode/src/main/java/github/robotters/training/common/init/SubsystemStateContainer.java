@@ -8,7 +8,7 @@ import java.util.Map;
 // State Map, Allowing Data to Be Shared Between Auto And Teleop
 // This Should Contain Everything that Should Be Shared
 // Each Inserted Op Mode Should Expose a Static Shared Key
-public class State {
+public class SubsystemStateContainer {
     private static Map<String, Subsystem> state;
 
     // Make State A Singleton Instance of Map<String, Subsystem>

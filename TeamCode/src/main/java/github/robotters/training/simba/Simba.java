@@ -6,12 +6,11 @@ import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.Map;
 
-import github.robotters.training.common.init.State;
+import github.robotters.training.common.init.SubsystemStateContainer;
 import github.robotters.training.simba.subsystems.DriveTrain;
 
 // Robot Class Run In Each Op Mode
@@ -23,27 +22,27 @@ public class Simba extends Robot {
     }
 
     public Simba(OpModeType type, HardwareMap map) {
-        Map<String, Subsystem> stateMap = State.getState();
-        InitSubsystems(stateMap, map);
+        Map<String, Subsystem> subsystemMap = SubsystemStateContainer.getState();
+        InitSubsystems(subsystemMap, map);
         if(type == OpModeType.AUTO) {
-            InitAutoScheduler(stateMap);
+            InitAutoScheduler(subsystemMap);
         } else if(type == OpModeType.TELEOP) {
-            InitTeleopScheduler(stateMap);
+            InitTeleopScheduler(subsystemMap);
         }
     }
 
     // Initialize The Auto Scheduler Using The Auto Drive Commands
-    private void InitAutoScheduler(Map<String, Subsystem> stateMap) {
+    private void InitAutoScheduler(Map<String, Subsystem> subsystemMap) {
 
     }
 
     // Initialize The Teleop Drive Commands
-    private void InitTeleopScheduler(Map<String, Subsystem> stateMap) {
+    private void InitTeleopScheduler(Map<String, Subsystem> subsystemMap) {
 
     }
 
-    private void InitSubsystems(Map<String, Subsystem> stateMap, HardwareMap map) {
-        if (!stateMap.containsKey(DriveTrain.key)) {
+    private void InitSubsystems(Map<String, Subsystem> subsystemMap, HardwareMap map) {
+        if (!subsystemMap.containsKey(DriveTrain.key)) {
             // Initialize Drivetrain Object
             Motor.GoBILDA drivetrain_motor_type = Motor.GoBILDA.RPM_312;
             MecanumDrive drive = new MecanumDrive(
@@ -52,7 +51,7 @@ public class Simba extends Robot {
                     new MotorEx(map, HardwareDef.backleft, drivetrain_motor_type),
                     new MotorEx(map, HardwareDef.backright, drivetrain_motor_type)
             );
-            stateMap.put(DriveTrain.key, new DriveTrain(drive));
+            subsystemMap.put(DriveTrain.key, new DriveTrain(drive));
         }
     }
 }
