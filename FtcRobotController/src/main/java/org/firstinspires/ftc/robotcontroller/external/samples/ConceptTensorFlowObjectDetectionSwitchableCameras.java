@@ -32,6 +32,7 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -39,8 +40,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionPortal.CameraState;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.List;
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection, using
@@ -53,134 +52,116 @@ import java.util.List;
 @Disabled
 public class ConceptTensorFlowObjectDetectionSwitchableCameras extends LinearOpMode {
 
-    /**
-     * Variables used for switching cameras.
-     */
-    private WebcamName webcam1, webcam2;
-    private boolean oldLeftBumper;
-    private boolean oldRightBumper;
+  /** Variables used for switching cameras. */
+  private WebcamName webcam1, webcam2;
 
-    /**
-     * The variable to store our instance of the TensorFlow Object Detection processor.
-     */
-    private TfodProcessor tfod;
+  private boolean oldLeftBumper;
+  private boolean oldRightBumper;
 
-    /**
-     * The variable to store our instance of the vision portal.
-     */
-    private VisionPortal visionPortal;
+  /** The variable to store our instance of the TensorFlow Object Detection processor. */
+  private TfodProcessor tfod;
 
-    @Override
-    public void runOpMode() {
+  /** The variable to store our instance of the vision portal. */
+  private VisionPortal visionPortal;
 
-        initTfod();
+  @Override
+  public void runOpMode() {
 
-        // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch Play to start OpMode");
+    initTfod();
+
+    // Wait for the DS start button to be touched.
+    telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+    telemetry.addData(">", "Touch Play to start OpMode");
+    telemetry.update();
+    waitForStart();
+
+    if (opModeIsActive()) {
+      while (opModeIsActive()) {
+
+        telemetryCameraSwitching();
+        telemetryTfod();
+
+        // Push telemetry to the Driver Station.
         telemetry.update();
-        waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-
-                telemetryCameraSwitching();
-                telemetryTfod();
-
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
-                }
-
-                doCameraSwitching();
-
-                // Share the CPU.
-                sleep(20);
-            }
+        // Save CPU resources; can resume streaming when needed.
+        if (gamepad1.dpad_down) {
+          visionPortal.stopStreaming();
+        } else if (gamepad1.dpad_up) {
+          visionPortal.resumeStreaming();
         }
 
-        // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+        doCameraSwitching();
 
-    }   // end runOpMode()
+        // Share the CPU.
+        sleep(20);
+      }
+    }
 
-    /**
-     * Initialize the TensorFlow Object Detection processor.
-     */
-    private void initTfod() {
+    // Save more CPU resources when camera is no longer needed.
+    visionPortal.close();
+  } // end runOpMode()
 
-        // Create the TensorFlow processor by using a builder.
-        tfod = new TfodProcessor.Builder().build();
+  /** Initialize the TensorFlow Object Detection processor. */
+  private void initTfod() {
 
-        webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
-        webcam2 = hardwareMap.get(WebcamName.class, "Webcam 2");
-        CameraName switchableCamera = ClassFactory.getInstance()
-            .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
+    // Create the TensorFlow processor by using a builder.
+    tfod = new TfodProcessor.Builder().build();
 
-        // Create the vision portal by using a builder.
-        visionPortal = new VisionPortal.Builder()
-            .setCamera(switchableCamera)
-            .addProcessor(tfod)
-            .build();
+    webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
+    webcam2 = hardwareMap.get(WebcamName.class, "Webcam 2");
+    CameraName switchableCamera =
+        ClassFactory.getInstance().getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
 
-    }   // end method initTfod()
+    // Create the vision portal by using a builder.
+    visionPortal =
+        new VisionPortal.Builder().setCamera(switchableCamera).addProcessor(tfod).build();
+  } // end method initTfod()
 
-    /**
-     * Add telemetry about camera switching.
-     */
-    private void telemetryCameraSwitching() {
-        if (visionPortal.getActiveCamera().equals(webcam1)) {
-            telemetry.addData("activeCamera", "Webcam 1");
-            telemetry.addData("Press RightBumper", "to switch to Webcam 2");
-        } else {
-            telemetry.addData("activeCamera", "Webcam 2");
-            telemetry.addData("Press LeftBumper", "to switch to Webcam 1");
-        }
-    }   // end method telemetryCameraSwitching()
+  /** Add telemetry about camera switching. */
+  private void telemetryCameraSwitching() {
+    if (visionPortal.getActiveCamera().equals(webcam1)) {
+      telemetry.addData("activeCamera", "Webcam 1");
+      telemetry.addData("Press RightBumper", "to switch to Webcam 2");
+    } else {
+      telemetry.addData("activeCamera", "Webcam 2");
+      telemetry.addData("Press LeftBumper", "to switch to Webcam 1");
+    }
+  } // end method telemetryCameraSwitching()
 
-    /**
-     * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
-     */
-    private void telemetryTfod() {
+  /** Add telemetry about TensorFlow Object Detection (TFOD) recognitions. */
+  private void telemetryTfod() {
 
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
+    List<Recognition> currentRecognitions = tfod.getRecognitions();
+    telemetry.addData("# Objects Detected", currentRecognitions.size());
 
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+    // Step through the list of recognitions and display info for each one.
+    for (Recognition recognition : currentRecognitions) {
+      double x = (recognition.getLeft() + recognition.getRight()) / 2;
+      double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-        }   // end for() loop
+      telemetry.addData("", " ");
+      telemetry.addData(
+          "Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+      telemetry.addData("- Position", "%.0f / %.0f", x, y);
+      telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+    } // end for() loop
+  } // end method telemetryTfod()
 
-    }   // end method telemetryTfod()
-
-    /**
-     * Set the active camera according to input from the gamepad.
-     */
-    private void doCameraSwitching() {
-        if (visionPortal.getCameraState() == CameraState.STREAMING) {
-            // If the left bumper is pressed, use Webcam 1.
-            // If the right bumper is pressed, use Webcam 2.
-            boolean newLeftBumper = gamepad1.left_bumper;
-            boolean newRightBumper = gamepad1.right_bumper;
-            if (newLeftBumper && !oldLeftBumper) {
-                visionPortal.setActiveCamera(webcam1);
-            } else if (newRightBumper && !oldRightBumper) {
-                visionPortal.setActiveCamera(webcam2);
-            }
-            oldLeftBumper = newLeftBumper;
-            oldRightBumper = newRightBumper;
-        }
-    }   // end method doCameraSwitching()
-
-}   // end class
+  /** Set the active camera according to input from the gamepad. */
+  private void doCameraSwitching() {
+    if (visionPortal.getCameraState() == CameraState.STREAMING) {
+      // If the left bumper is pressed, use Webcam 1.
+      // If the right bumper is pressed, use Webcam 2.
+      boolean newLeftBumper = gamepad1.left_bumper;
+      boolean newRightBumper = gamepad1.right_bumper;
+      if (newLeftBumper && !oldLeftBumper) {
+        visionPortal.setActiveCamera(webcam1);
+      } else if (newRightBumper && !oldRightBumper) {
+        visionPortal.setActiveCamera(webcam2);
+      }
+      oldLeftBumper = newLeftBumper;
+      oldRightBumper = newRightBumper;
+    }
+  } // end method doCameraSwitching()
+} // end class
