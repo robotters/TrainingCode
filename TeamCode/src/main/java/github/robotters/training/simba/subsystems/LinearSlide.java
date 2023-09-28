@@ -2,7 +2,6 @@ package github.robotters.training.simba.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class LinearSlide extends SubsystemBase {
     public static String key = "LinearSlide";
