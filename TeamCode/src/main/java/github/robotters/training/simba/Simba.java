@@ -28,27 +28,28 @@ import static github.robotters.training.common.init.StateContainer.get;
 // Robot Class Run In Each Op Mode
 public class Simba extends Robot {
     private static String hardwaremapkey = "HardwareMap";
+    private Map<String, Subsystem> subsystemMap;
     // Type Enum:
     public enum OpModeType {
         TELEOP, AUTO
     }
 
     public Simba(OpModeType type, HardwareMap map, Gamepads gamepads) {
-        Map<String, Subsystem> subsystemMap = SubsystemStateContainer.getState();
-        InitSubsystems(subsystemMap, map);
+        this.subsystemMap = SubsystemStateContainer.getState();
+        InitSubsystems(map);
         if(type == OpModeType.AUTO) {
-            InitAutoScheduler(subsystemMap);
+            InitAutoScheduler();
         } else if(type == OpModeType.TELEOP) {
-            InitTeleopScheduler(subsystemMap, gamepads);
+            InitTeleopScheduler(gamepads);
         }
     }
 
     // Initialize The Auto Scheduler Using The Auto Drive Commands
-    private void InitAutoScheduler(Map<String, Subsystem> subsystemMap) {
+    private void InitAutoScheduler() {
     }
 
     // Initialize The Teleop Drive Commands
-    private void InitTeleopScheduler(Map<String, Subsystem> subsystemMap, Gamepads gamepads) {
+    private void InitTeleopScheduler(Gamepads gamepads) {
         // Initialize Default Drive Command
         DriveTrain driveTrain = get(DriveTrain.class, DriveTrain.key);
         driveTrain.setDefaultCommand(
@@ -67,8 +68,8 @@ public class Simba extends Robot {
                 .whenPressed(new InstantCommand(() -> slide.target_position = LinearSlide.Position.DOWN));
     }
 
-    private void InitSubsystems(Map<String, Subsystem> subsystemMap, HardwareMap map) {
-        if (!subsystemMap.containsKey(DriveTrain.key)) {
+    private void InitSubsystems(HardwareMap map) {
+        if (!this.subsystemMap.containsKey(DriveTrain.key)) {
             // Initialize Drivetrain Object
             Motor.GoBILDA drivetrain_motor_type = Motor.GoBILDA.RPM_312;
             MecanumDrive drive = new MecanumDrive(
@@ -78,15 +79,15 @@ public class Simba extends Robot {
                     new MotorEx(map, HardwareDef.backright, drivetrain_motor_type)
             );
             DriveTrain driveTrain = new DriveTrain(drive);
-            subsystemMap.put(DriveTrain.key, driveTrain);
+            this.subsystemMap.put(DriveTrain.key, driveTrain);
         }
-        if (!subsystemMap.containsKey(LinearSlidePidController.key)) {
+        if (!this.subsystemMap.containsKey(LinearSlidePidController.key)) {
             LinearSlidePidController controller = new LinearSlidePidController(1, 1, 1, 1);
-            subsystemMap.put(LinearSlidePidController.key, controller);
+            this.subsystemMap.put(LinearSlidePidController.key, controller);
         }
-        if (!subsystemMap.containsKey(LinearSlide.key)) {
+        if (!this.subsystemMap.containsKey(LinearSlide.key)) {
             LinearSlide slide = new LinearSlide(new MotorEx(map, HardwareDef.slide_motor, Motor.GoBILDA.RPM_312));
-            subsystemMap.put(LinearSlide.key, slide);
+            this.subsystemMap.put(LinearSlide.key, slide);
         }
     }
 }
