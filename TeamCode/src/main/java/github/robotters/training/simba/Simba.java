@@ -23,7 +23,6 @@ import github.robotters.training.simba.commands.teleop.DefaultLinearSlideCommand
 import github.robotters.training.simba.subsystems.DriveTrain;
 import github.robotters.training.simba.subsystems.LinearSlide;
 import github.robotters.training.simba.subsystems.LinearSlidePidController;
-import static github.robotters.training.common.init.StateContainer.get;
 
 // Robot Class Run In Each Op Mode
 public class Simba extends Robot {
@@ -89,5 +88,9 @@ public class Simba extends Robot {
             LinearSlide slide = new LinearSlide(new MotorEx(map, HardwareDef.slide_motor, Motor.GoBILDA.RPM_312));
             this.subsystemMap.put(LinearSlide.key, slide);
         }
+    }
+
+    private <T> T get(Class<? extends T> c, String key) {
+        return c.cast(this.subsystemMap.get(key));
     }
 }

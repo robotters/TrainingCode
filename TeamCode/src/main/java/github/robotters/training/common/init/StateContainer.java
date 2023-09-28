@@ -16,8 +16,4 @@ public class StateContainer {
         return state;
     }
 
-    // Get Any Value
-    public static <T> T get(Class<? extends T> c, String key) {
-        return c.cast(state.get(key));
-    }
 }
