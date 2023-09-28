@@ -23,6 +23,7 @@ import github.robotters.training.simba.commands.teleop.DefaultLinearSlideCommand
 import github.robotters.training.simba.subsystems.DriveTrain;
 import github.robotters.training.simba.subsystems.LinearSlide;
 import github.robotters.training.simba.subsystems.LinearSlidePidController;
+import static github.robotters.training.common.init.StateContainer.get;
 
 // Robot Class Run In Each Op Mode
 public class Simba extends Robot {
@@ -49,13 +50,13 @@ public class Simba extends Robot {
     // Initialize The Teleop Drive Commands
     private void InitTeleopScheduler(Map<String, Subsystem> subsystemMap, Gamepads gamepads) {
         // Initialize Default Drive Command
-        DriveTrain driveTrain = (DriveTrain) subsystemMap.get(DriveTrain.key);
+        DriveTrain driveTrain = get(DriveTrain.class, DriveTrain.key);
         driveTrain.setDefaultCommand(
                 new DefaultDriveCommand(driveTrain, gamepads.driver1));
 
-        LinearSlide slide = (LinearSlide) subsystemMap.get(LinearSlide.key);
+        LinearSlide slide = get(LinearSlide.class, LinearSlide.key);
         slide.setDefaultCommand(
-                new DefaultLinearSlideCommand(slide, (LinearSlidePidController) subsystemMap.get(LinearSlidePidController.key)));
+                new DefaultLinearSlideCommand(slide, get(LinearSlidePidController.class, LinearSlidePidController.key)));
 
         // Set the Target Position To Up, When X Is Pressed
         gamepads.driver2.getGamepadButton(GamepadKeys.Button.X)
