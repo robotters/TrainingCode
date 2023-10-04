@@ -1,38 +1,29 @@
-package github.robotters.training.simba;
+package github.robotters.training.strafer;
 
 
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.command.Subsystem;
-import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.Map;
 
 import github.robotters.training.common.init.Gamepads;
 import github.robotters.training.common.init.SubsystemStateContainer;
-import github.robotters.training.simba.commands.teleop.DefaultDriveCommand;
-import github.robotters.training.simba.commands.teleop.DefaultLinearSlideCommand;
-import github.robotters.training.simba.subsystems.DriveTrain;
-import github.robotters.training.simba.subsystems.LinearSlide;
-import github.robotters.training.simba.subsystems.LinearSlidePidController;
+import github.robotters.training.strafer.commands.teleop.DefaultDriveCommand;
+import github.robotters.training.strafer.subsystems.DriveTrain;
 
 // Robot Class Run In Each Op Mode
-public class Simba extends Robot {
+public class Strafer extends Robot {
     private static String hardwaremapkey = "HardwareMap";
     // Type Enum:
     public enum OpModeType {
         TELEOP, AUTO
     }
 
-    public Simba(OpModeType type, HardwareMap map, Gamepads gamepads) {
+    public Strafer(OpModeType type, HardwareMap map, Gamepads gamepads) {
         Map<String, Subsystem> subsystemMap = SubsystemStateContainer.getState();
         InitSubsystems(subsystemMap, map);
         if(type == OpModeType.AUTO) {
@@ -52,18 +43,6 @@ public class Simba extends Robot {
         DriveTrain driveTrain = (DriveTrain) subsystemMap.get(DriveTrain.key);
         driveTrain.setDefaultCommand(
                 new DefaultDriveCommand(driveTrain, gamepads.driver1));
-
-        LinearSlide slide = (LinearSlide) subsystemMap.get(LinearSlide.key);
-        slide.setDefaultCommand(
-                new DefaultLinearSlideCommand(slide, (LinearSlidePidController) subsystemMap.get(LinearSlidePidController.key)));
-
-        // Set the Target Position To Up, When X Is Pressed
-        gamepads.driver2.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new InstantCommand(() -> slide.target_position = LinearSlide.Position.UP));
-
-        // When Y is pressed, Set Position to Down
-        gamepads.driver2.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new InstantCommand(() -> slide.target_position = LinearSlide.Position.DOWN));
     }
 
     private void InitSubsystems(Map<String, Subsystem> subsystemMap, HardwareMap map) {
@@ -78,14 +57,6 @@ public class Simba extends Robot {
             );
             DriveTrain driveTrain = new DriveTrain(drive);
             subsystemMap.put(DriveTrain.key, driveTrain);
-        }
-        if (!subsystemMap.containsKey(LinearSlidePidController.key)) {
-            LinearSlidePidController controller = new LinearSlidePidController(1, 1, 1, 1);
-            subsystemMap.put(LinearSlidePidController.key, controller);
-        }
-        if (!subsystemMap.containsKey(LinearSlide.key)) {
-            LinearSlide slide = new LinearSlide(new MotorEx(map, HardwareDef.slide_motor, Motor.GoBILDA.RPM_312));
-            subsystemMap.put(LinearSlide.key, slide);
         }
     }
 }

@@ -1,4 +1,4 @@
-package github.robotters.training.simba.subsystems;
+package github.robotters.training.strafer.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;

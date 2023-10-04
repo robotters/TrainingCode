@@ -1,4 +1,4 @@
-package github.robotters.training.simba.logic;
+package github.robotters.training.strafer.logic;
 
 public class DriveLogic {
     // Data Class (I yearn for Kotlin)

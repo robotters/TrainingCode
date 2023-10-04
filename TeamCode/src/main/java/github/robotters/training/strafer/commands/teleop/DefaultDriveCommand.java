@@ -1,10 +1,10 @@
-package github.robotters.training.simba.commands.teleop;
+package github.robotters.training.strafer.commands.teleop;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-import github.robotters.training.simba.logic.DriveLogic;
-import github.robotters.training.simba.subsystems.DriveTrain;
+import github.robotters.training.strafer.logic.DriveLogic;
+import github.robotters.training.strafer.subsystems.DriveTrain;
 
 // Drive Command Running Every Cycle, Unless Another Command Takes Priority
 public class DefaultDriveCommand extends CommandBase {
